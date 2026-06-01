@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotelaria Ypoti — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--verde:#2d5a27;--verde-e:#1a3a15;--verde-c:#3d7a35;--vinho:#8b2020;--ouro:#c9a84c;--ouro-c:#e8c97a;--creme:#f5f2eb;--cinza:#3a3a2a;--branco:#fff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--cinza);min-height:100vh;}
+.hdr{background:var(--verde-e);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid var(--vinho);}
+.hdr-logo{display:flex;align-items:center;gap:12px;}
+.hdr-icon{width:44px;height:44px;background:var(--vinho);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.hdr h1{font-family:'Playfair Display',serif;color:var(--branco);font-size:18px;letter-spacing:2px;text-transform:uppercase;}
+.hdr p{color:var(--ouro-c);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-top:1px;}
+.badge{background:var(--ouro);color:var(--verde-e);font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:20px;text-transform:uppercase;}
+.main{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 88px);}
+.prm{background:var(--verde-e);padding:24px 22px;border-right:3px solid var(--vinho);overflow-y:auto;}
+.prm h2{font-family:'Playfair Display',serif;color:var(--ouro);font-size:14px;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid rgba(201,168,76,0.22);}
+.sec{margin-bottom:22px;}
+.sec-t{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--ouro-c);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.sec-t::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.18);}
+.campo{margin-bottom:10px;}
+.campo label{display:block;font-size:10px;font-weight:600;color:rgba(248,244,236,0.55);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.uw{position:relative;}
+.uw input[type="number"],.uw input[type="date"]{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(201,168,76,0.28);border-radius:6px;padding:8px 12px;color:var(--branco);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;-moz-appearance:textfield;transition:border-color 0.2s;}
+.uw input::-webkit-outer-spin-button,.uw input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.uw input:focus{outline:none;border-color:var(--ouro);}
+.pfx{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ouro-c);font-size:11px;font-family:'JetBrains Mono',monospace;pointer-events:none;}
+.cp{padding-left:30px!important;}
+.nota{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.18);border-radius:5px;padding:8px 10px;font-size:10px;color:rgba(248,244,236,0.55);line-height:1.5;margin-bottom:10px;}
+.nota strong{color:var(--ouro-c);}
+.btn-gerar{width:100%;padding:12px;background:var(--verde-c);border:none;border-radius:7px;color:var(--branco);font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.2s;margin-top:4px;}
+.btn-gerar:hover{background:#3d7a3d;}
+.tag{text-align:center;font-size:10px;color:var(--ouro-c);letter-spacing:1px;margin-top:6px;opacity:0;transition:opacity 0.3s;}
+.tag.show{opacity:1;}
+.instrucao{margin-top:18px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:14px;}
+.instrucao h4{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ouro-c);margin-bottom:10px;}
+.instrucao ol{padding-left:16px;}
+.instrucao li{font-size:11px;color:rgba(248,244,236,0.65);margin-bottom:6px;line-height:1.5;}
+.instrucao li strong{color:var(--ouro-c);}
+.tab-panel{padding:24px 28px;overflow-y:auto;}
+.tab-panel h2{font-family:'Playfair Display',serif;color:var(--verde-e);font-size:14px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.tab-sub{font-size:11px;color:rgba(58,58,42,0.5);margin-bottom:16px;}
+.sumario{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.sum-card{background:var(--branco);border:1px solid rgba(45,90,39,0.15);border-radius:8px;padding:10px 14px;}
+.sum-card .sl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(58,58,42,0.4);margin-bottom:2px;}
+.sum-card .sv{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--verde-e);}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead tr{background:var(--verde-e);color:var(--branco);}
+thead th{padding:8px 11px;text-align:center;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+thead th:first-child{text-align:left;border-radius:6px 0 0 0;}
+thead th:last-child{border-radius:0 6px 0 0;}
+.sth tr{background:rgba(26,58,26,0.07);}
+.sth th{padding:5px 11px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--verde);text-align:center;}
+.sth th:first-child{text-align:left;}
+tbody tr{border-bottom:1px solid rgba(201,168,76,0.12);transition:background 0.15s;}
+tbody tr:hover{background:rgba(201,168,76,0.06);}
+tbody td{padding:7px 11px;text-align:center;color:var(--cinza);}
+tbody td:first-child{text-align:left;}
+td.vd{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--verde);font-size:13px;}
+td.va{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--vinho);font-size:12px;}
+td.vs{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(58,58,42,0.38);}
+.sep{height:9px;}
+.obs-adm{margin-top:14px;background:rgba(26,58,26,0.04);border-left:3px solid var(--vinho);border-radius:0 6px 6px 0;padding:10px 14px;}
+.obs-adm h4{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--verde-e);margin-bottom:5px;}
+.obs-adm ul{list-style:none;}
+.obs-adm li{font-size:11px;color:rgba(58,58,42,0.65);margin-bottom:2px;padding-left:12px;position:relative;}
+.obs-adm li::before{content:'▸';position:absolute;left:0;color:var(--vinho);font-size:9px;top:2px;}
+@media(max-width:800px){.main{grid-template-columns:1fr;}.prm{border-right:none;border-bottom:3px solid var(--vinho);}.hdr{flex-wrap:wrap;gap:8px;padding:12px 16px;}.tab-panel{padding:18px 14px;}.sumario{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-logo">
+    <div class="hdr-icon">🐂</div>
+    <div><h1>Hotelaria Ypoti</h1><p>Painel Administrativo</p></div>
+  </div>
+  <div style="text-align:right;">
+    <div style="color:var(--ouro-c);font-size:10px;font-family:'JetBrains Mono',monospace;">Válido até <strong id="txt-val">—</strong></div>
+    <div style="margin-top:5px;"><span class="badge">⚙ Admin</span></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="prm">
+    <h2>⚙ Configurações</h2>
+
+    <div class="sec">
+      <div class="sec-t">Modalidade Diária</div>
+      <div class="nota"><strong>Fórmula:</strong> Peso médio confinamento × %MS × Custo MS + Fixo + Lucro · GMD 1,5 kg/dia · Após limite: +5% consumo</div>
+      <div class="campo">
+        <label>Custo MS — Diária (U$/Kg MS)</label>
+        <div class="uw"><span class="pfx">U$</span><input type="number" id="a-ms" class="cp" value="0.240" step="0.001" min="0" oninput="recalc()"></div>
+      </div>
+      <div class="campo">
+        <label>Custo Fixo + Serviço (U$/Cab/dia)</label>
+        <div class="uw"><span class="pfx">U$</span><input type="number" id="a-fixo" class="cp" value="0.320" step="0.010" min="0" oninput="recalc()"></div>
+      </div>
+      <div class="campo">
+        <label>Lucro Desejado (U$/Cab/dia)</label>
+        <div class="uw"><span class="pfx">U$</span><input type="number" id="a-lucro" class="cp" value="0.700" step="0.010" min="0" oninput="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-t">Modalidade Matéria Seca</div>
+      <div class="nota"><strong>Fórmula:</strong> Peso médio × %MS × Preço MS/kg + Serviço · Híbrido +3% no %MS · ±2% por clique (máx ±4%)</div>
+      <div class="campo">
+        <label>Preço MS — Consumo Real (U$/Kg MS)</label>
+        <div class="uw"><span class="pfx">U$</span><input type="number" id="a-ms-kg" class="cp" value="0.295" step="0.001" min="0" oninput="recalc()"></div>
+      </div>
+      <div class="campo">
+        <label>Serviço (U$/Cab/dia)</label>
+        <div class="uw"><span class="pfx">U$</span><input type="number" id="a-servico" class="cp" value="0.400" step="0.010" min="0" oninput="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-t">Geral</div>
+      <div class="campo">
+        <label>% Híbrido sobre Zebu</label>
+        <div class="uw"><input type="number" id="a-hibrido" value="3" step="0.5" min="0" style="padding-right:30px;"></div>
+      </div>
+      <div class="campo">
+        <label>Ganho carcaça Macho (kg/dia)</label>
+        <div class="uw"><input type="number" id="a-ganho-m" value="1.0" step="0.05" min="0"></div>
+      </div>
+      <div class="campo">
+        <label>Ganho carcaça Fêmea (kg/dia)</label>
+        <div class="uw"><input type="number" id="a-ganho-f" value="0.78" step="0.05" min="0"></div>
+      </div>
+      <div class="campo">
+        <label>Válido até</label>
+        <div class="uw"><input type="date" id="a-val" style="padding:8px 12px;width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(201,168,76,0.28);border-radius:6px;color:var(--branco);font-size:13px;font-family:'Barlow',sans-serif;" onchange="recalc()"></div>
+      </div>
+    </div>
+
+    <button class="btn-gerar" onclick="gerarCliente()">💾 Gerar Arquivo do Cliente</button>
+    <div class="tag" id="tag">✓ Arquivo gerado e baixado!</div>
+
+    <div class="instrucao">
+      <h4>Como usar</h4>
+      <ol>
+        <li>Configure os valores acima</li>
+        <li>Clique <strong>Gerar Arquivo do Cliente</strong></li>
+        <li>O arquivo <strong>Hotelaria_Ypoti_Simulador.html</strong> será baixado</li>
+        <li>Mande pelo <strong>WhatsApp</strong> ou hospede no <strong>GitHub Pages</strong></li>
+        <li>O cliente abre e usa — sem ver nenhum custo</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="tab-panel">
+    <div class="sumario">
+      <div class="sum-card"><div class="sl">Custo MS Diária</div><div class="sv" id="s-ms">—</div></div>
+      <div class="sum-card"><div class="sl">Fixo + Serviço</div><div class="sv" id="s-fx">—</div></div>
+      <div class="sum-card"><div class="sl">Lucro Desejado</div><div class="sv" id="s-lc">—</div></div>
+      <div class="sum-card"><div class="sl">MS Consumo Real</div><div class="sv" id="s-mskg">—</div></div>
+      <div class="sum-card"><div class="sl">Serviço MS</div><div class="sv" id="s-srv">—</div></div>
+      <div class="sum-card"><div class="sl">Híbrido</div><div class="sv" id="s-hib">—</div></div>
+    </div>
+
+    <h2>Preço · Diária — Modalidade Diária</h2>
+    <p class="tab-sub">Calculado automaticamente · U$ · GMD 1,5 kg/dia · Híbrido +3%</p>
+    <table>
+      <thead><tr>
+        <th colspan="2">Faixa de Peso</th><th>% MS</th><th>Peso Médio</th>
+        <th>Zebu</th><th>Híbrido</th><th>Limite</th><th>Após Limite</th>
+      </tr></thead>
+      <tbody class="sth"><tr><th colspan="8">♂ MACHOS</th></tr></tbody>
+      <tbody id="tb-m"></tbody>
+      <tbody><tr class="sep"><td colspan="8"></td></tr></tbody>
+      <tbody class="sth"><tr><th colspan="8">♀ FÊMEAS</th></tr></tbody>
+      <tbody id="tb-f"></tbody>
+    </table>
+
+    <div style="height:24px;"></div>
+
+    <h2>Preço · Diária — Modalidade Matéria Seca</h2>
+    <p class="tab-sub">Peso médio do confinamento × %MS × U$/KgMS + Serviço · GMD 1,5 kg/dia · 110 dias exemplo</p>
+    <table>
+      <thead><tr>
+        <th colspan="2">Faixa de Peso</th><th>% MS</th><th>Peso Médio</th>
+        <th>Consumo MS/dia</th><th>Zebu</th><th>Híbrido</th>
+      </tr></thead>
+      <tbody class="sth"><tr><th colspan="7">♂ MACHOS · 110 dias</th></tr></tbody>
+      <tbody id="tb-ms-m"></tbody>
+      <tbody><tr class="sep"><td colspan="7"></td></tr></tbody>
+      <tbody class="sth"><tr><th colspan="7">♀ FÊMEAS · 110 dias</th></tr></tbody>
+      <tbody id="tb-ms-f"></tbody>
+    </table>
+
+    <div class="obs-adm">
+      <h4>Observações</h4>
+      <ul>
+        <li>Híbrido: +3% no %MS de consumo (come mais, não só preço maior)</li>
+        <li>Após limite: +5% no consumo de MS (animal mais pesado)</li>
+        <li>Acima de 480 Kg cobrado o valor máximo · Preço individual por cabeça</li>
+        <li>Modalidade MS: sem limite de dias, baseado no consumo real</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const GMD=1.50;
+const MACHOS=[{de:0,ate:270,pct:0.0255,lim:130},{de:271,ate:285,pct:0.0253,lim:130},{de:286,ate:300,pct:0.0251,lim:120},{de:301,ate:315,pct:0.0249,lim:120},{de:316,ate:330,pct:0.0247,lim:110},{de:331,ate:345,pct:0.0245,lim:105},{de:346,ate:360,pct:0.0243,lim:105},{de:361,ate:375,pct:0.0241,lim:100},{de:376,ate:390,pct:0.0239,lim:100},{de:391,ate:405,pct:0.0237,lim:95},{de:406,ate:420,pct:0.0235,lim:90},{de:421,ate:435,pct:0.0233,lim:85},{de:436,ate:450,pct:0.0231,lim:85},{de:451,ate:465,pct:0.0229,lim:85},{de:466,ate:480,pct:0.0227,lim:85}];
+const FEMEAS=[{de:0,ate:270,pct:0.0270,lim:100},{de:271,ate:285,pct:0.0268,lim:100},{de:286,ate:300,pct:0.0266,lim:100},{de:301,ate:315,pct:0.0264,lim:90},{de:316,ate:330,pct:0.0262,lim:90},{de:331,ate:345,pct:0.0260,lim:90},{de:346,ate:360,pct:0.0258,lim:80},{de:361,ate:375,pct:0.0256,lim:80},{de:376,ate:390,pct:0.0254,lim:80},{de:391,ate:405,pct:0.0252,lim:80}];
+
+function getP(){return{ms:parseFloat(document.getElementById('a-ms').value)||0.240,fixo:parseFloat(document.getElementById('a-fixo').value)||0.320,lucro:parseFloat(document.getElementById('a-lucro').value)||0.700,mskg:parseFloat(document.getElementById('a-ms-kg').value)||0.295,servico:parseFloat(document.getElementById('a-servico').value)||0.400,hibrido:parseFloat(document.getElementById('a-hibrido').value)||3,ganhoM:parseFloat(document.getElementById('a-ganho-m').value)||1.0,ganhoF:parseFloat(document.getElementById('a-ganho-f').value)||0.78,val:document.getElementById('a-val').value};}
+function pmDiaria(f){const e=(f.de+f.ate)/2;return(e+e+GMD*f.lim)/2;}
+function pmMS(f,dias){const e=(f.de+f.ate)/2,pf=e+GMD*dias;return(e+pf)/2;}
+function darD(f,p,apos,hib){return pmDiaria(f)*f.pct*(apos?1.05:1)*(hib?1+p.hibrido/100:1)*p.ms+p.fixo+p.lucro;}
+function darMS(f,p,hib,dias){const pm=pmMS(f,dias),pct=f.pct*(hib?1+p.hibrido/100:1);return pm*pct*p.mskg+p.servico;}
+function fmt(n){return'U$ '+n.toFixed(2).replace('.',',');}
+
+function recalc(){
+  const p=getP();
+  renderD(MACHOS,'tb-m',p);renderD(FEMEAS,'tb-f',p);
+  renderMS(MACHOS,'tb-ms-m',p,110);renderMS(FEMEAS,'tb-ms-f',p,110);
+  const el=document.getElementById('txt-val');
+  if(p.val){const d=new Date(p.val+'T12:00:00');el.textContent=d.toLocaleDateString('pt-BR');}
+  document.getElementById('s-ms').textContent='U$ '+p.ms.toFixed(3);
+  document.getElementById('s-fx').textContent='U$ '+p.fixo.toFixed(3);
+  document.getElementById('s-lc').textContent='U$ '+p.lucro.toFixed(3);
+  document.getElementById('s-mskg').textContent='U$ '+p.mskg.toFixed(3);
+  document.getElementById('s-srv').textContent='U$ '+p.servico.toFixed(3);
+  document.getElementById('s-hib').textContent='+'+p.hibrido+'%';
+}
+
+function renderD(faixas,id,p){
+  const tb=document.getElementById(id);tb.innerHTML='';
+  faixas.forEach(f=>{
+    const pm=pmDiaria(f),d=darD(f,p,false,false),dh=darD(f,p,false,true),da=darD(f,p,true,false);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${f.de===0?'0':f.de} Kg</td><td>${f.ate} Kg</td><td class="vs">${(f.pct*100).toFixed(2)}%</td><td class="vs">${pm.toFixed(0)} kg</td><td class="vd">${fmt(d)}</td><td class="vd" style="color:var(--verde-c)">${fmt(dh)}</td><td>${f.lim} dias</td><td class="va">${fmt(da)}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function renderMS(faixas,id,p,dias){
+  const tb=document.getElementById(id);tb.innerHTML='';
+  faixas.forEach(f=>{
+    const pm=pmMS(f,dias),consumo=pm*f.pct,d=darMS(f,p,false,dias),dh=darMS(f,p,true,dias);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${f.de===0?'0':f.de} Kg</td><td>${f.ate} Kg</td><td class="vs">${(f.pct*100).toFixed(2)}%</td><td class="vs">${pm.toFixed(0)} kg</td><td class="vs">${consumo.toFixed(2)} kg</td><td class="vd">${fmt(d)}</td><td class="vd" style="color:var(--verde-c)">${fmt(dh)}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function gerarCliente(){
+  const p=getP();
+  const hibPct=p.hibrido/100;
+  const valStr=p.val?`'${p.val}'`:`''`;
+
+  // Lê o HTML do cliente v3 e substitui as constantes
+  const clienteHTML=gerarHTMLCliente(p,hibPct,valStr);
+  const blob=new Blob([clienteHTML],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Hotelaria_Ypoti_Simulador.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  const t=document.getElementById('tag');t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function gerarHTMLCliente(p,hibPct,valStr){
+// Template completo do cliente com parâmetros embutidos
+return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Hotelaria Ypoti — Simulador</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--verde:#2d5a27;--verde-e:#1a3a15;--verde-c:#3d7a35;--vinho:#8b2020;--vinho-c:#a83030;--ouro:#c9a84c;--ouro-c:#e8c97a;--creme:#f5f2eb;--cinza:#3a3a2a;--branco:#ffffff;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--cinza);min-height:100vh;max-width:480px;margin:0 auto;}
+.hdr{background:var(--verde-e);padding:14px 20px 10px;border-bottom:3px solid var(--vinho);}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;}
+.hdr-brand{display:flex;align-items:center;gap:10px;}
+.hdr-icon{width:38px;height:38px;background:var(--vinho);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.hdr h1{font-family:'Playfair Display',serif;color:var(--branco);font-size:16px;letter-spacing:1.5px;text-transform:uppercase;line-height:1.1;}
+.hdr p{color:rgba(255,255,255,0.45);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-top:1px;}
+.hdr-val{text-align:right;}
+.hdr-val span{font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;display:block;}
+.hdr-val strong{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ouro-c);}
+.abas{display:flex;background:var(--verde-e);border-bottom:3px solid var(--vinho);}
+.aba{flex:1;padding:13px 8px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all 0.2s;}
+.aba.ativa{color:var(--ouro-c);border-bottom-color:var(--ouro);}
+.tela{display:none;padding:18px 16px 40px;}
+.tela.ativa{display:block;}
+.clabel{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(58,58,42,0.5);margin-bottom:6px;display:block;}
+.cinput{width:100%;background:var(--branco);border:1.5px solid rgba(45,90,39,0.2);border-radius:8px;padding:12px 14px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:500;color:var(--cinza);transition:border-color 0.2s;}
+.cinput:focus{outline:none;border-color:var(--verde);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+.tbtn{padding:11px 8px;border-radius:8px;border:1.5px solid rgba(45,90,39,0.2);background:var(--branco);color:rgba(58,58,42,0.45);font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center;}
+.tbtn.on{background:var(--verde);color:var(--branco);border-color:var(--verde);}
+.stepper{display:flex;align-items:center;background:var(--branco);border:1.5px solid rgba(45,90,39,0.2);border-radius:10px;overflow:hidden;margin-bottom:18px;}
+.sbtn{width:58px;height:58px;border:none;background:transparent;cursor:pointer;font-size:28px;font-weight:300;color:var(--verde);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s;user-select:none;-webkit-user-select:none;}
+.sbtn:active{background:rgba(45,90,39,0.08);}
+.sc{flex:1;text-align:center;}
+.sc .sv{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--verde-e);line-height:1;}
+.sc .sl{font-size:10px;color:rgba(58,58,42,0.4);margin-top:2px;letter-spacing:1px;}
+.consumo-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:18px;}
+.cbtn{padding:10px 4px;border-radius:8px;border:1.5px solid rgba(45,90,39,0.2);background:var(--branco);color:rgba(58,58,42,0.45);font-family:'Barlow',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;text-align:center;}
+.cbtn.on{background:var(--verde);color:var(--branco);border-color:var(--verde);}
+.cbtn.on.menos{background:var(--vinho);border-color:var(--vinho);}
+.data-row{display:flex;align-items:center;background:var(--branco);border:1.5px solid rgba(45,90,39,0.2);border-radius:8px;padding:10px 14px;margin-bottom:18px;gap:10px;}
+.data-row input[type="date"]{border:none;outline:none;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;color:var(--cinza);background:transparent;flex:1;}
+.qtd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px;}
+.qtd-btn{padding:10px 4px;border-radius:7px;border:1.5px solid rgba(45,90,39,0.2);background:var(--branco);color:rgba(58,58,42,0.45);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;text-align:center;}
+.qtd-btn.on{background:var(--verde);color:var(--branco);border-color:var(--verde);}
+.qtd-hint{font-size:10px;color:rgba(58,58,42,0.35);text-align:center;margin-bottom:18px;}
+.res-card{background:var(--verde-e);border-radius:12px;overflow:hidden;margin-top:6px;display:none;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.rc-topo{background:var(--vinho);padding:10px 18px;}
+.rc-topo .rt-l{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.6);}
+.rc-topo .rt-v{font-size:14px;font-weight:700;color:var(--branco);margin-top:1px;}
+.rc-diaria{padding:20px 18px 14px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.07);}
+.rc-diaria .dl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:4px;}
+.rc-diaria .dv{font-family:'JetBrains Mono',monospace;font-size:52px;font-weight:700;color:var(--branco);line-height:1;}
+.rc-diaria .du{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;}
+.rc-grid{padding:14px 18px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.rc-item .il{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:2px;}
+.rc-item .iv{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--ouro-c);}
+.periodos{margin:0 18px;background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;margin-bottom:14px;}
+.periodo-linha{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.periodo-linha .pl{font-size:11px;color:rgba(255,255,255,0.5);}
+.periodo-linha .pv{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--ouro-c);}
+.periodo-sep{border-top:1px solid rgba(255,255,255,0.1);margin:8px 0;}
+.periodo-media{display:flex;justify-content:space-between;align-items:baseline;}
+.periodo-media .ml{font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);}
+.periodo-media .mv{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--branco);}
+.rc-apos{margin:0 18px 16px;background:rgba(139,32,32,0.3);border:1px solid rgba(139,32,32,0.5);border-radius:7px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
+.rc-apos .al{font-size:10px;color:rgba(255,255,255,0.45);}
+.rc-apos .av{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:#e08080;}
+.ms-detalhe{margin:0 18px 16px;background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;}
+.ms-linha{display:flex;justify-content:space-between;margin-bottom:5px;}
+.ms-linha .mll{font-size:10px;color:rgba(255,255,255,0.45);}
+.ms-linha .mlv{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);}
+.sim-card{display:none;margin-top:6px;animation:fadeIn 0.3s ease;}
+.sim-header{background:var(--verde-e);border-radius:10px 10px 0 0;padding:16px 18px;border-bottom:3px solid var(--vinho);}
+.sim-header .shl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+.sim-header .shv{font-family:'Playfair Display',serif;font-size:20px;color:var(--branco);margin-top:2px;}
+.sim-lote{background:var(--branco);padding:14px 18px;border:1px solid rgba(45,90,39,0.1);border-top:none;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.sim-lote-item .ll{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(58,58,42,0.35);margin-bottom:2px;}
+.sim-lote-item .lv{font-size:12px;font-weight:700;color:var(--verde-e);}
+.sim-bloco{background:var(--branco);padding:16px 18px;border:1px solid rgba(45,90,39,0.1);border-top:none;}
+.sim-titulo{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(58,58,42,0.35);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.sim-titulo::after{content:'';flex:1;height:1px;background:rgba(58,58,42,0.1);}
+.sim-linha{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid rgba(58,58,42,0.06);}
+.sim-linha .rl{font-size:12px;color:rgba(58,58,42,0.55);}
+.sim-linha .rv{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--cinza);}
+.sim-total{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0 0;}
+.sim-total .tl{font-size:13px;font-weight:700;color:var(--verde-e);}
+.sim-total .tv{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;color:var(--verde-e);}
+.sim-aviso{background:rgba(45,90,39,0.06);border-radius:6px;padding:8px 12px;margin-top:8px;font-size:10px;color:rgba(58,58,42,0.55);line-height:1.5;}
+.sim-destaque{background:var(--verde-e);padding:22px 18px;}
+.sim-destaque .ddl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:5px;}
+.sim-destaque .ddv{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:700;color:var(--branco);line-height:1;}
+.sim-destaque .ddpct{display:inline-block;background:var(--verde-c);color:var(--branco);font-size:13px;font-weight:700;padding:4px 14px;border-radius:20px;margin-top:8px;}
+.sim-destaque .ddobs{font-size:10px;color:rgba(255,255,255,0.3);margin-top:10px;line-height:1.6;}
+.sim-isencao{background:rgba(255,255,255,0.07);border-radius:6px;padding:10px 12px;margin-top:10px;font-size:10px;color:rgba(255,255,255,0.35);line-height:1.6;font-style:italic;}
+.sim-rodape{background:var(--vinho);padding:12px 18px;border-radius:0 0 10px 10px;}
+.sim-rodape p{font-size:10px;color:rgba(255,255,255,0.7);line-height:1.6;}
+.btn-sim{width:100%;padding:14px;background:var(--verde);border:none;border-radius:9px;color:var(--branco);font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-bottom:10px;}
+.btn-sim:active{background:var(--verde-c);}
+.btn-pdf{width:100%;padding:13px;background:var(--vinho);border:none;border-radius:9px;color:var(--branco);font-family:'Barlow',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;margin-top:14px;display:none;}
+.btn-pdf:active{background:var(--vinho-c);}
+.pdf-status{text-align:center;font-size:11px;color:rgba(58,58,42,0.5);margin-top:8px;min-height:16px;}
+.obs{margin-top:16px;padding:12px 14px;border-left:3px solid var(--vinho);background:rgba(139,32,32,0.05);border-radius:0 7px 7px 0;}
+.obs p{font-size:11px;color:rgba(58,58,42,0.6);margin-bottom:3px;padding-left:10px;position:relative;line-height:1.4;}
+.obs p::before{content:'▸';position:absolute;left:0;color:var(--vinho);font-size:9px;top:2px;}
+.gap{height:14px;}
+.pdf-area{position:fixed;left:-9999px;top:0;width:600px;background:#fff;font-family:Georgia,serif;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-brand">
+      <div class="hdr-icon">🐂</div>
+      <div><h1>Hotelaria Ypoti</h1><p>Arroyito · Concepción</p></div>
+    </div>
+    <div class="hdr-val"><span>Válido até</span><strong id="txt-val">—</strong></div>
+  </div>
+</div>
+<div class="abas">
+  <div class="aba ativa" onclick="irAba('d',this)">① Diária</div>
+  <div class="aba" onclick="irAba('ms',this)">② Mat. Seca</div>
+</div>
+<div class="tela ativa" id="aba-d">
+  <span class="clabel" style="margin-bottom:6px;">Nome da empresa / fazenda</span>
+  <input type="text" class="cinput" id="d-empresa" placeholder="Ex: Fazenda São João" oninput="syncEmp('d')" style="margin-bottom:18px;">
+  <span class="clabel" style="margin-bottom:6px;">Sexo do animal</span>
+  <div class="row2">
+    <button class="tbtn on" onclick="setToggle('d-sexo','macho',this);calcD()">♂ Macho</button>
+    <button class="tbtn" onclick="setToggle('d-sexo','femea',this);calcD()">♀ Fêmea</button>
+  </div>
+  <span class="clabel" style="margin-bottom:6px;">Raça</span>
+  <div class="row2">
+    <button class="tbtn on" onclick="setToggle('d-raca',0,this);calcD()">Zebu</button>
+    <button class="tbtn" onclick="setToggle('d-raca',HIB,this);calcD()">Híbrido</button>
+  </div>
+  <span class="clabel" style="margin-bottom:6px;">Peso de chegada</span>
+  <div class="stepper">
+    <button class="sbtn" onclick="step('d-peso',-5,100,600);calcD()">−</button>
+    <div class="sc"><div class="sv" id="sv-d-peso">360</div><div class="sl">quilogramas</div></div>
+    <button class="sbtn" onclick="step('d-peso',+5,100,600);calcD()">+</button>
+  </div>
+  <span class="clabel" style="margin-bottom:6px;">Dias de permanência</span>
+  <div class="stepper">
+    <button class="sbtn" onclick="step('d-dias',-1,1,365);calcD()">−</button>
+    <div class="sc"><div class="sv" id="sv-d-dias">—</div><div class="sl">dias no confinamento</div></div>
+    <button class="sbtn" onclick="step('d-dias',+1,1,365);calcD()">+</button>
+  </div>
+  <div class="res-card" id="res-d">
+    <div class="rc-topo"><div class="rt-l">Proposta para</div><div class="rt-v" id="rd-empresa">—</div></div>
+    <div class="rc-diaria"><div class="dl">Valor da diária</div><div class="dv" id="rd-val">—</div><div class="du">dólares / cabeça / dia</div></div>
+    <div class="rc-grid">
+      <div class="rc-item"><div class="il">Faixa de peso</div><div class="iv" id="rd-faixa">—</div></div>
+      <div class="rc-item"><div class="il">Raça</div><div class="iv" id="rd-raca">—</div></div>
+      <div class="rc-item"><div class="il">Limite da faixa</div><div class="iv" id="rd-limite">—</div></div>
+      <div class="rc-item"><div class="il">Dias escolhidos</div><div class="iv" id="rd-dias">—</div></div>
+    </div>
+    <div class="periodos" id="rd-periodos" style="display:none;">
+      <div class="periodo-linha"><span class="pl" id="rd-p1-label">—</span><span class="pv" id="rd-p1-val">—</span></div>
+      <div class="periodo-linha"><span class="pl" id="rd-p2-label">—</span><span class="pv" id="rd-p2-val">—</span></div>
+      <div class="periodo-sep"></div>
+      <div class="periodo-media"><span class="ml">Diária média ponderada</span><span class="mv" id="rd-media">—</span></div>
+    </div>
+    <div class="rc-apos" id="rd-apos-box">
+      <div class="al" id="rd-apos-label">Após o limite:</div>
+      <div class="av" id="rd-apos">—</div>
+    </div>
+  </div>
+  <div class="gap"></div>
+  <span class="clabel" style="margin-bottom:6px;">Quantidade de animais</span>
+  <div class="qtd-grid" id="d-qtd-grid"></div>
+  <div class="qtd-hint">Mínimo 150 · capacidade de 1 baia</div>
+  <span class="clabel" style="margin-bottom:6px;">Data de envio</span>
+  <div class="data-row"><span>📅</span><input type="date" id="d-data" onchange="calcD()"></div>
+  <span class="clabel" style="margin-bottom:6px;">Preço de venda da carcaça</span>
+  <div class="stepper">
+    <button class="sbtn" onclick="stepF('d-carcaca',-0.03,1,20)">−</button>
+    <div class="sc"><div class="sv" id="sv-d-carcaca">U$ 5,10</div><div class="sl">por kg de carcaça</div></div>
+    <button class="sbtn" onclick="stepF('d-carcaca',+0.03,1,20)">+</button>
+  </div>
+  <button class="btn-sim" onclick="simD()">Simular Investimento</button>
+  <div class="sim-card" id="sim-d">
+    <div class="sim-header"><div class="shl">Simulação · Modalidade Diária</div><div class="shv" id="sd-empresa">—</div></div>
+    <div class="sim-lote">
+      <div class="sim-lote-item"><div class="ll">Animais</div><div class="lv" id="sd-qtd">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Peso chegada</div><div class="lv" id="sd-peso">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Sexo/Raça</div><div class="lv" id="sd-sexo">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Envio</div><div class="lv" id="sd-envio">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Dias</div><div class="lv" id="sd-dias">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Saída prevista</div><div class="lv" id="sd-saida">—</div></div>
+    </div>
+    <div class="sim-bloco">
+      <div class="sim-titulo">Custo do Confinamento</div>
+      <div class="sim-linha"><span class="rl">Diária média por cabeça</span><span class="rv" id="sd-diaria">—</span></div>
+      <div class="sim-linha"><span class="rl">Dias de permanência</span><span class="rv" id="sd-diasc">—</span></div>
+      <div class="sim-linha"><span class="rl">Quantidade de animais</span><span class="rv" id="sd-qtdc">—</span></div>
+      <div class="sim-total"><span class="tl">Total do confinamento</span><span class="tv" id="sd-custo">—</span></div>
+      <div class="sim-aviso">⏳ Pagamento somente após o abate — sem desembolso antecipado</div>
+    </div>
+    <div class="sim-bloco">
+      <div class="sim-titulo">Retorno Estimado · Simulação</div>
+      <div class="sim-linha"><span class="rl">Ganho de carcaça por animal</span><span class="rv" id="sd-ganho">—</span></div>
+      <div class="sim-linha"><span class="rl">Preço de venda (U$/kg)</span><span class="rv" id="sd-preco">—</span></div>
+      <div class="sim-linha"><span class="rl">Quantidade de animais</span><span class="rv" id="sd-qtdr">—</span></div>
+      <div class="sim-total"><span class="tl">Receita bruta estimada</span><span class="tv" id="sd-receita">—</span></div>
+    </div>
+    <div class="sim-destaque">
+      <div class="ddl">Lucro Estimado do Lote</div>
+      <div class="ddv" id="sd-lucro">—</div>
+      <div><span class="ddpct" id="sd-pct">—</span></div>
+      <div class="ddobs">Sem investimento inicial · Pagamento após abate</div>
+      <div class="sim-isencao">⚠ Simulação apenas. Os dados são baseados em médias de desempenho e não constituem garantia de resultado. Fatores como raça, sanidade, clima e mercado podem influenciar os resultados reais.</div>
+    </div>
+    <div class="sim-rodape"><p>Simulação gerada pela Hotelaria Ypoti · Arroyito, Concepción, Paraguai</p></div>
+    <button class="btn-pdf" id="btn-pdf-d" onclick="gerarPDF('d')">📄 Salvar / Compartilhar PDF</button>
+    <div class="pdf-status" id="status-d"></div>
+  </div>
+  <div class="obs">
+    <p>Pagamento somente após o abate dos animais</p>
+    <p>Acima de 480 Kg cobrado o valor máximo da tabela</p>
+    <p>Dias além do limite são cobrados pela diária após limite</p>
+    <p>Preço cobrado individualmente por cabeça</p>
+  </div>
+</div>
+<div class="tela" id="aba-ms">
+  <span class="clabel" style="margin-bottom:6px;">Nome da empresa / fazenda</span>
+  <input type="text" class="cinput" id="ms-empresa" placeholder="Ex: Fazenda São João" oninput="syncEmp('ms')" style="margin-bottom:18px;">
+  <span class="clabel" style="margin-bottom:6px;">Sexo do animal</span>
+  <div class="row2">
+    <button class="tbtn on" onclick="setToggle('ms-sexo','macho',this);calcMS()">♂ Macho</button>
+    <button class="tbtn" onclick="setToggle('ms-sexo','femea',this);calcMS()">♀ Fêmea</button>
+  </div>
+  <span class="clabel" style="margin-bottom:6px;">Raça</span>
+  <div class="row2">
+    <button class="tbtn on" onclick="setToggle('ms-raca',0,this);calcMS()">Zebu</button>
+    <button class="tbtn" onclick="setToggle('ms-raca',HIB,this);calcMS()">Híbrido</button>
+  </div>
+  <span class="clabel" style="margin-bottom:6px;">Peso de chegada</span>
+  <div class="stepper">
+    <button class="sbtn" onclick="step('ms-peso',-5,100,600);calcMS()">−</button>
+    <div class="sc"><div class="sv" id="sv-ms-peso">360</div><div class="sl">quilogramas</div></div>
+    <button class="sbtn" onclick="step('ms-peso',+5,100,600);calcMS()">+</button>
+  </div>
+  <span class="clabel" style="margin-bottom:6px;">Dias de permanência</span>
+  <div class="stepper">
+    <button class="sbtn" onclick="step('ms-dias',-1,1,365);calcMS()">−</button>
+    <div class="sc"><div class="sv" id="sv-ms-dias">110</div><div class="sl">dias no confinamento</div></div>
+    <button class="sbtn" onclick="step('ms-dias',+1,1,365);calcMS()">+</button>
+  </div>
+  <span class="clabel" style="margin-bottom:6px;">Consumo de Matéria Seca</span>
+  <div class="consumo-row">
+    <button class="cbtn menos" id="cb-menos" onclick="setConsumo(-1)">− 2%</button>
+    <button class="cbtn on" id="cb-pad" onclick="setConsumo(0)">Padrão</button>
+    <button class="cbtn" id="cb-mais" onclick="setConsumo(+1)">+ 2%</button>
+  </div>
+  <div class="res-card" id="res-ms">
+    <div class="rc-topo"><div class="rt-l">Modalidade Mat. Seca · Proposta para</div><div class="rt-v" id="rms-empresa">—</div></div>
+    <div class="rc-diaria"><div class="dl">Valor da diária</div><div class="dv" id="rms-val">—</div><div class="du">dólares / cabeça / dia</div></div>
+    <div class="ms-detalhe">
+      <div class="ms-linha"><span class="mll">Peso médio no confinamento</span><span class="mlv" id="rms-pmedio">—</span></div>
+      <div class="ms-linha"><span class="mll">Consumo MS/dia</span><span class="mlv" id="rms-consumo">—</span></div>
+      <div class="ms-linha"><span class="mll">MS × U$ ${p.mskg.toFixed(3)}/kg</span><span class="mlv" id="rms-cusalim">—</span></div>
+      <div class="ms-linha"><span class="mll">Serviço/dia</span><span class="mlv">U$ ${p.servico.toFixed(2)}</span></div>
+    </div>
+    <div class="rc-grid">
+      <div class="rc-item"><div class="il">Raça</div><div class="iv" id="rms-raca">—</div></div>
+      <div class="rc-item"><div class="il">Consumo</div><div class="iv" id="rms-var">—</div></div>
+      <div class="rc-item"><div class="il">Dias</div><div class="iv" id="rms-dias">—</div></div>
+      <div class="rc-item"><div class="il">MS total período</div><div class="iv" id="rms-mstotal">—</div></div>
+    </div>
+  </div>
+  <div class="gap"></div>
+  <span class="clabel" style="margin-bottom:6px;">Quantidade de animais</span>
+  <div class="qtd-grid" id="ms-qtd-grid"></div>
+  <div class="qtd-hint">Mínimo 150 · capacidade de 1 baia</div>
+  <span class="clabel" style="margin-bottom:6px;">Data de envio</span>
+  <div class="data-row"><span>📅</span><input type="date" id="ms-data" onchange="calcMS()"></div>
+  <span class="clabel" style="margin-bottom:6px;">Preço de venda da carcaça</span>
+  <div class="stepper">
+    <button class="sbtn" onclick="stepF('ms-carcaca',-0.03,1,20)">−</button>
+    <div class="sc"><div class="sv" id="sv-ms-carcaca">U$ 5,10</div><div class="sl">por kg de carcaça</div></div>
+    <button class="sbtn" onclick="stepF('ms-carcaca',+0.03,1,20)">+</button>
+  </div>
+  <button class="btn-sim" onclick="simMS()">Simular Investimento</button>
+  <div class="sim-card" id="sim-ms">
+    <div class="sim-header"><div class="shl">Simulação · Modalidade Matéria Seca</div><div class="shv" id="sms-empresa">—</div></div>
+    <div class="sim-lote">
+      <div class="sim-lote-item"><div class="ll">Animais</div><div class="lv" id="sms-qtd">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Peso chegada</div><div class="lv" id="sms-peso">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Sexo/Raça</div><div class="lv" id="sms-sexo">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Envio</div><div class="lv" id="sms-envio">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Dias</div><div class="lv" id="sms-dias">—</div></div>
+      <div class="sim-lote-item"><div class="ll">Saída prevista</div><div class="lv" id="sms-saida">—</div></div>
+    </div>
+    <div class="sim-bloco">
+      <div class="sim-titulo">Custo · Modalidade Matéria Seca</div>
+      <div class="sim-linha"><span class="rl">Diária por cabeça</span><span class="rv" id="sms-diaria">—</span></div>
+      <div class="sim-linha"><span class="rl">Consumo MS/dia por animal</span><span class="rv" id="sms-consumo">—</span></div>
+      <div class="sim-linha"><span class="rl">Dias de permanência</span><span class="rv" id="sms-diasc">—</span></div>
+      <div class="sim-linha"><span class="rl">Quantidade de animais</span><span class="rv" id="sms-qtdc">—</span></div>
+      <div class="sim-total"><span class="tl">Total do confinamento</span><span class="tv" id="sms-custo">—</span></div>
+      <div class="sim-aviso">⏳ Pagamento somente após o abate — sem desembolso antecipado</div>
+    </div>
+    <div class="sim-bloco">
+      <div class="sim-titulo">Retorno Estimado · Simulação</div>
+      <div class="sim-linha"><span class="rl">Ganho de carcaça por animal</span><span class="rv" id="sms-ganho">—</span></div>
+      <div class="sim-linha"><span class="rl">Preço de venda (U$/kg)</span><span class="rv" id="sms-preco">—</span></div>
+      <div class="sim-linha"><span class="rl">Quantidade de animais</span><span class="rv" id="sms-qtdr">—</span></div>
+      <div class="sim-total"><span class="tl">Receita bruta estimada</span><span class="tv" id="sms-receita">—</span></div>
+    </div>
+    <div class="sim-destaque">
+      <div class="ddl">Lucro Estimado do Lote</div>
+      <div class="ddv" id="sms-lucro">—</div>
+      <div><span class="ddpct" id="sms-pct">—</span></div>
+      <div class="ddobs">Sem investimento inicial · Pagamento após abate</div>
+      <div class="sim-isencao">⚠ Simulação apenas. Os dados são baseados em médias de desempenho e não constituem garantia de resultado. Fatores como raça, sanidade, clima e mercado podem influenciar os resultados reais.</div>
+    </div>
+    <div class="sim-rodape"><p>Simulação gerada pela Hotelaria Ypoti · Arroyito, Concepción, Paraguai</p></div>
+    <button class="btn-pdf" id="btn-pdf-ms" onclick="gerarPDF('ms')">📄 Salvar / Compartilhar PDF</button>
+    <div class="pdf-status" id="status-ms"></div>
+  </div>
+  <div class="obs" style="margin-top:16px;">
+    <p>Cobrança baseada no consumo real de Matéria Seca</p>
+    <p>Híbrido consome ${p.hibrido}% a mais de MS que o Zebu</p>
+    <p>Pagamento somente após o abate dos animais</p>
+    <p>Preço cobrado individualmente por cabeça</p>
+  </div>
+</div>
+<div class="pdf-area" id="pdf-d"></div>
+<div class="pdf-area" id="pdf-ms"></div>
+<script>
+const GMD=1.50,MS_PRECO=${p.ms},FIXO=${p.fixo},LUCRO_ADM=${p.lucro},MS_KG=${p.mskg},SERVICO=${p.servico},HIB=${hibPct},GANHO_MACHO=${p.ganhoM},GANHO_FEMEA=${p.ganhoF},VALIDADE=${valStr};
+const ISENCAO='⚠ Simulação apenas. Os dados são baseados em médias de desempenho e não constituem garantia de resultado. Fatores como raça, sanidade animal, condições climáticas e variações de mercado podem influenciar os resultados reais.';
+const MACHOS=[{de:0,ate:270,pct:0.0255,lim:130},{de:271,ate:285,pct:0.0253,lim:130},{de:286,ate:300,pct:0.0251,lim:120},{de:301,ate:315,pct:0.0249,lim:120},{de:316,ate:330,pct:0.0247,lim:110},{de:331,ate:345,pct:0.0245,lim:105},{de:346,ate:360,pct:0.0243,lim:105},{de:361,ate:375,pct:0.0241,lim:100},{de:376,ate:390,pct:0.0239,lim:100},{de:391,ate:405,pct:0.0237,lim:95},{de:406,ate:420,pct:0.0235,lim:90},{de:421,ate:435,pct:0.0233,lim:85},{de:436,ate:450,pct:0.0231,lim:85},{de:451,ate:465,pct:0.0229,lim:85},{de:466,ate:480,pct:0.0227,lim:85}];
+const FEMEAS=[{de:0,ate:270,pct:0.0270,lim:100},{de:271,ate:285,pct:0.0268,lim:100},{de:286,ate:300,pct:0.0266,lim:100},{de:301,ate:315,pct:0.0264,lim:90},{de:316,ate:330,pct:0.0262,lim:90},{de:331,ate:345,pct:0.0260,lim:90},{de:346,ate:360,pct:0.0258,lim:80},{de:361,ate:375,pct:0.0256,lim:80},{de:376,ate:390,pct:0.0254,lim:80},{de:391,ate:405,pct:0.0252,lim:80}];
+const ST={'d-sexo':'macho','d-raca':0,'d-peso':360,'d-dias':null,'d-carcaca':5.10,'d-qtd':150,'ms-sexo':'macho','ms-raca':0,'ms-peso':360,'ms-dias':110,'ms-carcaca':5.10,'ms-qtd':150,'ms-consumo':0};
+function r2(n){return Math.round(n*100)/100;}
+function fmtU(n){return'U\$ '+n.toFixed(2).replace('.',',');}
+function fmtUG(n){return'U\$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function addDias(s,d){const dt=new Date(s+'T12:00:00');dt.setDate(dt.getDate()+d);return dt.toLocaleDateString('pt-BR');}
+function getFaixa(peso,sexo){const fx=sexo==='macho'?MACHOS:FEMEAS,c=Math.min(peso,480);let f=fx[fx.length-1];for(const x of fx)if(c>=x.de&&c<=x.ate){f=x;break;}return f;}
+function pmD(f){const e=(f.de+f.ate)/2;return(e+e+GMD*f.lim)/2;}
+function pmMS(peso,dias){return(peso+(peso+GMD*dias))/2;}
+function darD(f,apos,hib){return pmD(f)*f.pct*(apos?1.05:1)*(1+(hib?HIB:0))*MS_PRECO+FIXO+LUCRO_ADM;}
+function step(k,d,mn,mx){ST[k]=Math.max(mn,Math.min(mx,(ST[k]||360)+d));document.getElementById('sv-'+k).textContent=ST[k];}
+function stepF(k,d,mn,mx){ST[k]=r2(Math.max(mn,Math.min(mx,(ST[k]||5.10)+d)));document.getElementById('sv-'+k).textContent='U\$ '+ST[k].toFixed(2).replace('.',',');}
+function setToggle(k,v,btn){ST[k]=v;btn.parentElement.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+function setConsumo(dir){if(dir===0){ST['ms-consumo']=0;}else{const n=ST['ms-consumo']+dir;if(n<-2||n>2)return;ST['ms-consumo']=n;}const c=ST['ms-consumo'];document.getElementById('cb-menos').classList.toggle('on',c<0);document.getElementById('cb-pad').classList.toggle('on',c===0);document.getElementById('cb-mais').classList.toggle('on',c>0);calcMS();}
+function irAba(id,el){document.querySelectorAll('.aba').forEach(a=>a.classList.remove('ativa'));document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));el.classList.add('ativa');document.getElementById('aba-'+id).classList.add('ativa');syncEmp(id);}
+function syncEmp(from){const e=document.getElementById(from+'-empresa').value;['d','ms'].forEach(k=>{if(k!==from)document.getElementById(k+'-empresa').value=e;});}
+function buildQtd(gid,sk){const g=document.getElementById(gid);g.innerHTML='';[150,300,450,600,750,900,1050,1200].forEach(q=>{const b=document.createElement('button');b.className='qtd-btn'+(q===150?' on':'');b.textContent=q;b.onclick=()=>{g.querySelectorAll('.qtd-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');ST[sk]=q;};g.appendChild(b);});}
+function calcD(){const sexo=ST['d-sexo'],peso=ST['d-peso'],hib=ST['d-raca']>0;const f=getFaixa(peso,sexo);if(ST['d-dias']===null){ST['d-dias']=f.lim;document.getElementById('sv-d-dias').textContent=f.lim;}const dias=ST['d-dias'],emp=document.getElementById('d-empresa').value||'—';const racaNome=hib?'Híbrido':'Zebu';const dN=darD(f,false,hib),dA=darD(f,true,hib);let diariaMed;if(dias<=f.lim){diariaMed=dN;document.getElementById('rd-periodos').style.display='none';document.getElementById('rd-apos-box').style.display='flex';document.getElementById('rd-apos').textContent=fmtU(dA);document.getElementById('rd-apos-label').textContent='Após o limite de '+f.lim+' dias:';}else{const de=dias-f.lim,cN=dN*f.lim,cA=dA*de;diariaMed=(cN+cA)/dias;document.getElementById('rd-p1-label').textContent=f.lim+' dias × '+fmtU(dN)+' (dentro do limite)';document.getElementById('rd-p1-val').textContent=fmtUG(cN);document.getElementById('rd-p2-label').textContent=de+' dias × '+fmtU(dA)+' (além do limite)';document.getElementById('rd-p2-val').textContent=fmtUG(cA);document.getElementById('rd-media').textContent=fmtU(diariaMed);document.getElementById('rd-periodos').style.display='block';document.getElementById('rd-apos-box').style.display='none';}const envio=document.getElementById('d-data').value;const saida=envio?addDias(envio,dias):'—';document.getElementById('rd-empresa').textContent=emp;document.getElementById('rd-val').textContent=fmtU(diariaMed);document.getElementById('rd-faixa').textContent=(f.de===0?'0':f.de)+'–'+f.ate+' kg';document.getElementById('rd-raca').textContent=racaNome;document.getElementById('rd-limite').textContent=f.lim+' dias';document.getElementById('rd-dias').textContent=dias+' dias';document.getElementById('res-d').style.display='block';}
+function calcMS(){const sexo=ST['ms-sexo'],peso=ST['ms-peso'],hib=ST['ms-raca']>0,dias=ST['ms-dias'],cs=ST['ms-consumo'];const emp=document.getElementById('ms-empresa').value||'—';const racaNome=hib?'Híbrido':'Zebu';const f=getFaixa(peso,sexo);const pm=pmMS(peso,dias);const pctBase=f.pct*(1+(hib?HIB:0)),pctFinal=pctBase*(1+cs*0.02);const consumoMS=pm*pctFinal,cusAlim=consumoMS*MS_KG,diaria=cusAlim+SERVICO;const msTotal=consumoMS*dias;const varLabel=cs===0?'Padrão':(cs>0?'+'+Math.abs(cs*2)+'%':'-'+Math.abs(cs*2)+'%');document.getElementById('rms-empresa').textContent=emp;document.getElementById('rms-val').textContent=fmtU(diaria);document.getElementById('rms-pmedio').textContent=pm.toFixed(1)+' kg';document.getElementById('rms-consumo').textContent=consumoMS.toFixed(2)+' kg/dia';document.getElementById('rms-cusalim').textContent=fmtU(cusAlim);document.getElementById('rms-raca').textContent=racaNome;document.getElementById('rms-var').textContent=varLabel;document.getElementById('rms-dias').textContent=dias+' dias';document.getElementById('rms-mstotal').textContent=msTotal.toFixed(1)+' kg';document.getElementById('res-ms').style.display='block';}
+function simD(){const sexo=ST['d-sexo'],peso=ST['d-peso'],hib=ST['d-raca']>0,qtd=ST['d-qtd'],carcaca=ST['d-carcaca'];const dias=ST['d-dias']||getFaixa(peso,sexo).lim;const emp=document.getElementById('d-empresa').value||'—';const envio=document.getElementById('d-data').value;if(!envio){alert('Informe a data de envio.');return;}const f=getFaixa(peso,sexo);const dN=darD(f,false,hib),dA=darD(f,true,hib);const diariaMed=dias<=f.lim?dN:(dN*f.lim+dA*(dias-f.lim))/dias;const saida=addDias(envio,dias),envioFmt=new Date(envio+'T12:00:00').toLocaleDateString('pt-BR');const racaNome=hib?'Híbrido':'Zebu';const ganhoKg=(sexo==='macho'?GANHO_MACHO:GANHO_FEMEA)*dias;const custoTotal=diariaMed*qtd*dias,receita=ganhoKg*carcaca*qtd,lucro=receita-custoTotal,pct=(lucro/custoTotal)*100;document.getElementById('sd-empresa').textContent=emp;document.getElementById('sd-qtd').textContent=qtd+' cab.';document.getElementById('sd-peso').textContent=peso+' kg';document.getElementById('sd-sexo').textContent=(sexo==='macho'?'Macho':'Fêmea')+' · '+racaNome;document.getElementById('sd-envio').textContent=envioFmt;document.getElementById('sd-dias').textContent=dias+' dias';document.getElementById('sd-saida').textContent=saida;document.getElementById('sd-diaria').textContent=fmtU(diariaMed);document.getElementById('sd-diasc').textContent=dias+' dias';document.getElementById('sd-qtdc').textContent=qtd+' animais';document.getElementById('sd-custo').textContent=fmtUG(custoTotal);document.getElementById('sd-ganho').textContent=ganhoKg.toFixed(1)+' kg/animal';document.getElementById('sd-preco').textContent=fmtU(carcaca)+'/kg';document.getElementById('sd-qtdr').textContent=qtd+' animais';document.getElementById('sd-receita').textContent=fmtUG(receita);document.getElementById('sd-lucro').textContent=fmtUG(lucro);document.getElementById('sd-pct').textContent='+'+pct.toFixed(1)+'% de retorno';document.getElementById('sim-d').style.display='block';document.getElementById('btn-pdf-d').style.display='block';montarPDF('d',{emp,peso,qtd,sexo,racaNome,envioFmt,dias,saida,diaria:diariaMed,custoTotal,ganhoKg,carcaca,receita,lucro,pct,modalidade:'Diária'});setTimeout(()=>document.getElementById('sim-d').scrollIntoView({behavior:'smooth',block:'start'}),100);}
+function simMS(){const sexo=ST['ms-sexo'],peso=ST['ms-peso'],hib=ST['ms-raca']>0,dias=ST['ms-dias'],cs=ST['ms-consumo'],qtd=ST['ms-qtd'],carcaca=ST['ms-carcaca'];const emp=document.getElementById('ms-empresa').value||'—';const envio=document.getElementById('ms-data').value;if(!envio){alert('Informe a data de envio.');return;}const f=getFaixa(peso,sexo);const pm=pmMS(peso,dias);const pctFinal=f.pct*(1+(hib?HIB:0))*(1+cs*0.02);const consumoMS=pm*pctFinal,diaria=consumoMS*MS_KG+SERVICO;const saida=addDias(envio,dias),envioFmt=new Date(envio+'T12:00:00').toLocaleDateString('pt-BR');const racaNome=hib?'Híbrido':'Zebu';const ganhoKg=(sexo==='macho'?GANHO_MACHO:GANHO_FEMEA)*dias;const custoTotal=diaria*qtd*dias,receita=ganhoKg*carcaca*qtd,lucro=receita-custoTotal,pct=(lucro/custoTotal)*100;document.getElementById('sms-empresa').textContent=emp;document.getElementById('sms-qtd').textContent=qtd+' cab.';document.getElementById('sms-peso').textContent=peso+' kg';document.getElementById('sms-sexo').textContent=(sexo==='macho'?'Macho':'Fêmea')+' · '+racaNome;document.getElementById('sms-envio').textContent=envioFmt;document.getElementById('sms-dias').textContent=dias+' dias';document.getElementById('sms-saida').textContent=saida;document.getElementById('sms-diaria').textContent=fmtU(diaria);document.getElementById('sms-consumo').textContent=consumoMS.toFixed(2)+' kg';document.getElementById('sms-diasc').textContent=dias+' dias';document.getElementById('sms-qtdc').textContent=qtd+' animais';document.getElementById('sms-custo').textContent=fmtUG(custoTotal);document.getElementById('sms-ganho').textContent=ganhoKg.toFixed(1)+' kg/animal';document.getElementById('sms-preco').textContent=fmtU(carcaca)+'/kg';document.getElementById('sms-qtdr').textContent=qtd+' animais';document.getElementById('sms-receita').textContent=fmtUG(receita);document.getElementById('sms-lucro').textContent=fmtUG(lucro);document.getElementById('sms-pct').textContent='+'+pct.toFixed(1)+'% de retorno';document.getElementById('sim-ms').style.display='block';document.getElementById('btn-pdf-ms').style.display='block';montarPDF('ms',{emp,peso,qtd,sexo,racaNome,envioFmt,dias,saida,diaria,custoTotal,ganhoKg,carcaca,receita,lucro,pct,modalidade:'Matéria Seca',consumoMS:consumoMS.toFixed(2)});setTimeout(()=>document.getElementById('sim-ms').scrollIntoView({behavior:'smooth',block:'start'}),100);}
+function montarPDF(tipo,d){const hoje=new Date().toLocaleDateString('pt-BR');const extraMS=tipo==='ms'?\`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(45,90,39,0.08);"><span style="font-size:13px;color:rgba(58,58,42,0.55);">Consumo MS/dia por animal</span><span style="font-size:13px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${d.consumoMS} kg</span></div>\`:'';document.getElementById('pdf-'+tipo).innerHTML=\`<div style="width:600px;font-family:Georgia,serif;background:#fff;"><div style="background:#1a3a15;padding:28px 32px 22px;"><div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:2px;text-transform:uppercase;">HOTELARIA YPOTI</div><div style="font-size:10px;color:rgba(255,255,255,0.45);letter-spacing:3px;text-transform:uppercase;margin-top:2px;">Arroyito · Concepción · Paraguai</div><div style="border-bottom:3px solid #8b2020;margin:14px 0;"></div><div style="display:flex;justify-content:space-between;align-items:flex-end;"><div><div style="font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;">Simulação · Modalidade \${d.modalidade}</div><div style="font-size:20px;font-weight:700;color:#fff;font-family:Georgia,serif;">\${d.emp}</div></div><div style="text-align:right;"><div style="font-size:9px;color:rgba(255,255,255,0.4);">Data de geração</div><div style="font-size:13px;color:#e8c97a;font-weight:700;margin-top:1px;">\${hoje}</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:1px;font-style:italic;">Documento de simulação</div></div></div></div><div style="background:#8b2020;padding:7px 32px;"><div style="font-size:9px;color:rgba(255,255,255,0.85);letter-spacing:2px;text-transform:uppercase;">Documento de Simulação · Não constitui garantia de resultado</div></div><div style="background:#f5f2eb;padding:20px 32px;"><div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(58,58,42,0.4);margin-bottom:10px;">Dados do Lote</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">\${[['Quantidade',d.qtd+' cabeças'],['Peso de chegada',d.peso+' kg'],['Sexo / Raça',(d.sexo==='macho'?'Macho':'Fêmea')+' · '+d.racaNome],['Data de envio',d.envioFmt],['Dias de permanência',d.dias+' dias'],['Saída prevista',d.saida]].map(([l,v])=>\`<div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid rgba(45,90,39,0.12);"><div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(58,58,42,0.35);margin-bottom:3px;">\${l}</div><div style="font-size:13px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${v}</div></div>\`).join('')}</div></div><div style="background:#fff;padding:20px 32px;border-top:1px solid rgba(45,90,39,0.08);"><div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(58,58,42,0.35);margin-bottom:12px;">Custo do Confinamento · \${d.modalidade}</div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(45,90,39,0.08);"><span style="font-size:13px;color:rgba(58,58,42,0.55);">Diária por cabeça</span><span style="font-size:13px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${fmtU(d.diaria)}</span></div>\${extraMS}<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(45,90,39,0.08);"><span style="font-size:13px;color:rgba(58,58,42,0.55);">Dias de permanência</span><span style="font-size:13px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${d.dias} dias</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(45,90,39,0.08);"><span style="font-size:13px;color:rgba(58,58,42,0.55);">Quantidade de animais</span><span style="font-size:13px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${d.qtd} animais</span></div><div style="display:flex;justify-content:space-between;padding:10px 0 0;"><span style="font-size:13px;font-weight:700;color:#1a3a15;">Total do confinamento</span><span style="font-size:18px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${fmtUG(d.custoTotal)}</span></div><div style="background:rgba(45,90,39,0.06);border-radius:5px;padding:8px 12px;margin-top:8px;font-size:10px;color:rgba(58,58,42,0.6);line-height:1.5;">⏳ Pagamento somente após o abate dos animais — sem desembolso antecipado</div></div><div style="background:#fff;padding:20px 32px;border-top:1px solid rgba(45,90,39,0.08);"><div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(58,58,42,0.35);margin-bottom:12px;">Retorno Estimado · Simulação</div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(45,90,39,0.08);"><span style="font-size:13px;color:rgba(58,58,42,0.55);">Ganho de carcaça por animal</span><span style="font-size:13px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${d.ganhoKg.toFixed(1)} kg</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(45,90,39,0.08);"><span style="font-size:13px;color:rgba(58,58,42,0.55);">Preço de venda da carcaça</span><span style="font-size:13px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${fmtU(d.carcaca)}/kg</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(45,90,39,0.08);"><span style="font-size:13px;color:rgba(58,58,42,0.55);">Quantidade de animais</span><span style="font-size:13px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${d.qtd} animais</span></div><div style="display:flex;justify-content:space-between;padding:10px 0 0;"><span style="font-size:13px;font-weight:700;color:#1a3a15;">Receita bruta estimada</span><span style="font-size:18px;font-weight:700;color:#1a3a15;font-family:Georgia,serif;">\${fmtUG(d.receita)}</span></div></div><div style="background:#1a3a15;padding:26px 32px;"><div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:5px;">Lucro Estimado do Lote · Simulação</div><div style="font-size:40px;font-weight:700;color:#fff;font-family:Georgia,serif;line-height:1;">\${fmtUG(d.lucro)}</div><div style="display:inline-block;background:#3d7a35;color:#fff;font-size:13px;font-weight:700;padding:4px 14px;border-radius:20px;margin-top:8px;">+\${d.pct.toFixed(1)}% de retorno sobre o investimento</div><div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:10px;line-height:1.6;">Sem investimento inicial · Pagamento após abate dos animais</div><div style="background:rgba(255,255,255,0.07);border-radius:5px;padding:10px 12px;margin-top:12px;font-size:9px;color:rgba(255,255,255,0.4);line-height:1.7;font-style:italic;">\${ISENCAO}</div></div><div style="background:#8b2020;padding:12px 32px;"><div style="font-size:9px;color:rgba(255,255,255,0.8);line-height:1.6;">Documento gerado em \${hoje} · Simulação apenas · Hotelaria Ypoti · Arroyito, Concepción, Paraguai</div></div></div>\`;}
+async function gerarPDF(tipo){const statusEl=document.getElementById('status-'+tipo);statusEl.textContent='⏳ Gerando PDF...';try{const {jsPDF}=window.jspdf;const el=document.getElementById('pdf-'+tipo);el.style.left='0';el.style.top='0';el.style.zIndex='-1';const canvas=await html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false});el.style.left='-9999px';const imgData=canvas.toDataURL('image/jpeg',0.95);const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});const pW=pdf.internal.pageSize.getWidth(),pH=pdf.internal.pageSize.getHeight();const iH=(canvas.height*pW)/canvas.width;if(iH<=pH){pdf.addImage(imgData,'JPEG',0,0,pW,iH);}else{let yo=0,rem=iH;while(rem>0){pdf.addImage(imgData,'JPEG',0,-yo,pW,iH);rem-=pH;yo+=pH;if(rem>0)pdf.addPage();}}pdf.save('Hotelaria_Ypoti_'+tipo.toUpperCase()+'.pdf');statusEl.textContent='✓ PDF salvo!';setTimeout(()=>statusEl.textContent='',3000);}catch(e){statusEl.textContent='❌ Erro ao gerar PDF';console.error(e);}}
+(function(){if(VALIDADE){const d=new Date(VALIDADE+'T12:00:00');document.getElementById('txt-val').textContent=d.toLocaleDateString('pt-BR');}const hoje=new Date().toISOString().split('T')[0];document.getElementById('d-data').value=hoje;document.getElementById('ms-data').value=hoje;buildQtd('d-qtd-grid','d-qtd');buildQtd('ms-qtd-grid','ms-qtd');calcD();calcMS();})();
+<\/script>
+</body>
+</html>`;
+}
+
+(function(){
+  const d=new Date();d.setDate(d.getDate()+5);
+  document.getElementById('a-val').value=d.toISOString().split('T')[0];
+  recalc();
+})();
+</script>
+</body>
+</html>
