@@ -35,6 +35,8 @@ body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--cinza);
 .sbtn:active{background:rgba(45,90,39,0.08);}
 .sc{flex:1;text-align:center;}
 .sc .sv{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--verde-e);line-height:1;}
+.sc input.sv-in{width:100%;border:none;background:transparent;text-align:center;padding:4px 0;outline:none;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--verde-e);line-height:1;-webkit-appearance:none;border-radius:6px;}
+.sc input.sv-in:focus{background:rgba(201,168,76,0.15);}
 .sc .sl{font-size:10px;color:rgba(58,58,42,0.4);margin-top:2px;letter-spacing:1px;}
 .consumo-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:18px;}
 .cbtn{padding:10px 4px;border-radius:8px;border:1.5px solid rgba(45,90,39,0.2);background:var(--branco);color:rgba(58,58,42,0.45);font-family:'Barlow',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;text-align:center;}
@@ -141,13 +143,13 @@ body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--cinza);
   <span class="clabel" style="margin-bottom:6px;">Peso de chegada</span>
   <div class="stepper">
     <button class="sbtn" onclick="step('d-peso',-5,100,600);calcD()">−</button>
-    <div class="sc"><div class="sv" id="sv-d-peso">360</div><div class="sl">quilogramas</div></div>
+    <div class="sc"><input class="sv sv-in" id="sv-d-peso" type="text" inputmode="numeric" value="360" onkeydown="if(event.key==='Enter')this.blur()" onfocus="this.select()" onchange="digita('d-peso',100,600,0);calcD()"><div class="sl">quilogramas · toque para digitar</div></div>
     <button class="sbtn" onclick="step('d-peso',+5,100,600);calcD()">+</button>
   </div>
   <span class="clabel" style="margin-bottom:6px;">Dias de permanência</span>
   <div class="stepper">
     <button class="sbtn" onclick="step('d-dias',-1,1,365);calcD()">−</button>
-    <div class="sc"><div class="sv" id="sv-d-dias">—</div><div class="sl">dias no confinamento</div></div>
+    <div class="sc"><input class="sv sv-in" id="sv-d-dias" type="text" inputmode="numeric" value="" onkeydown="if(event.key==='Enter')this.blur()" onfocus="this.select()" onchange="digita('d-dias',1,365,0);calcD()"><div class="sl">dias no confinamento · toque para digitar</div></div>
     <button class="sbtn" onclick="step('d-dias',+1,1,365);calcD()">+</button>
   </div>
   <div class="res-card" id="res-d">
@@ -178,9 +180,9 @@ body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--cinza);
   <div class="data-row"><span>📅</span><input type="date" id="d-data" onchange="calcD()"></div>
   <span class="clabel" style="margin-bottom:6px;">Preço de venda da carcaça</span>
   <div class="stepper">
-    <button class="sbtn" onclick="stepF('d-carcaca',-0.03,1,20)">−</button>
-    <div class="sc"><div class="sv" id="sv-d-carcaca">U$ 5,10</div><div class="sl">por kg de carcaça</div></div>
-    <button class="sbtn" onclick="stepF('d-carcaca',+0.03,1,20)">+</button>
+    <button class="sbtn" onclick="stepF('d-carcaca',-0.05,1,20)">−</button>
+    <div class="sc"><input class="sv sv-in" id="sv-d-carcaca" type="text" inputmode="decimal" value="" onkeydown="if(event.key==='Enter')this.blur()" onfocus="this.select()" onchange="digita('d-carcaca',1,20,2)"><div class="sl">U$ por kg de carcaça · toque para digitar</div></div>
+    <button class="sbtn" onclick="stepF('d-carcaca',+0.05,1,20)">+</button>
   </div>
   <button class="btn-sim" onclick="simD()">Simular Investimento</button>
   <div class="sim-card" id="sim-d">
@@ -242,13 +244,13 @@ body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--cinza);
   <span class="clabel" style="margin-bottom:6px;">Peso de chegada</span>
   <div class="stepper">
     <button class="sbtn" onclick="step('ms-peso',-5,100,600);calcMS()">−</button>
-    <div class="sc"><div class="sv" id="sv-ms-peso">360</div><div class="sl">quilogramas</div></div>
+    <div class="sc"><input class="sv sv-in" id="sv-ms-peso" type="text" inputmode="numeric" value="360" onkeydown="if(event.key==='Enter')this.blur()" onfocus="this.select()" onchange="digita('ms-peso',100,600,0);calcMS()"><div class="sl">quilogramas · toque para digitar</div></div>
     <button class="sbtn" onclick="step('ms-peso',+5,100,600);calcMS()">+</button>
   </div>
   <span class="clabel" style="margin-bottom:6px;">Dias de permanência</span>
   <div class="stepper">
     <button class="sbtn" onclick="step('ms-dias',-1,1,365);calcMS()">−</button>
-    <div class="sc"><div class="sv" id="sv-ms-dias">110</div><div class="sl">dias no confinamento</div></div>
+    <div class="sc"><input class="sv sv-in" id="sv-ms-dias" type="text" inputmode="numeric" value="110" onkeydown="if(event.key==='Enter')this.blur()" onfocus="this.select()" onchange="digita('ms-dias',1,365,0);calcMS()"><div class="sl">dias no confinamento · toque para digitar</div></div>
     <button class="sbtn" onclick="step('ms-dias',+1,1,365);calcMS()">+</button>
   </div>
   <span class="clabel" style="margin-bottom:6px;">Consumo de Matéria Seca</span>
@@ -282,9 +284,9 @@ body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--cinza);
   <div class="data-row"><span>📅</span><input type="date" id="ms-data" onchange="calcMS()"></div>
   <span class="clabel" style="margin-bottom:6px;">Preço de venda da carcaça</span>
   <div class="stepper">
-    <button class="sbtn" onclick="stepF('ms-carcaca',-0.03,1,20)">−</button>
-    <div class="sc"><div class="sv" id="sv-ms-carcaca">U$ 5,10</div><div class="sl">por kg de carcaça</div></div>
-    <button class="sbtn" onclick="stepF('ms-carcaca',+0.03,1,20)">+</button>
+    <button class="sbtn" onclick="stepF('ms-carcaca',-0.05,1,20)">−</button>
+    <div class="sc"><input class="sv sv-in" id="sv-ms-carcaca" type="text" inputmode="decimal" value="" onkeydown="if(event.key==='Enter')this.blur()" onfocus="this.select()" onchange="digita('ms-carcaca',1,20,2)"><div class="sl">U$ por kg de carcaça · toque para digitar</div></div>
+    <button class="sbtn" onclick="stepF('ms-carcaca',+0.05,1,20)">+</button>
   </div>
   <button class="btn-sim" onclick="simMS()">Simular Investimento</button>
   <div class="sim-card" id="sim-ms">
@@ -336,11 +338,11 @@ body{font-family:'Barlow',sans-serif;background:var(--creme);color:var(--cinza);
   </div>
 </div>
 <script>
-const GMD=1.50,GMD_F=1.10,MS_PRECO=0.24,FIXO=0.32,LUCRO_ADM=0.7,MS_KG=0.295,SERVICO=0.4,HIB=0.03,GANHO_MACHO=1,GANHO_FEMEA=0.78,VALIDADE='2026-09-08';
+const GMD=1.50,GMD_F=1.10,MS_PRECO=0.24,FIXO=0.32,LUCRO_ADM=0.7,MS_KG=0.295,SERVICO=0.4,HIB=0.03,GANHO_MACHO=1,GANHO_FEMEA=0.78,VALIDADE='2026-09-08',CARCACA=5.5;
 const ISENCAO='⚠ Simulação apenas. Os dados são baseados em médias de desempenho e não constituem garantia de resultado. Fatores como raça, sanidade animal, condições climáticas e variações de mercado podem influenciar os resultados reais.';
 const MACHOS=[{de:271,ate:285,pct:0.0253,lim:130},{de:286,ate:300,pct:0.0251,lim:120},{de:301,ate:315,pct:0.0249,lim:120},{de:316,ate:330,pct:0.0247,lim:110},{de:331,ate:345,pct:0.0245,lim:105},{de:346,ate:360,pct:0.0243,lim:105},{de:361,ate:375,pct:0.0241,lim:100},{de:376,ate:390,pct:0.0239,lim:100},{de:391,ate:405,pct:0.0237,lim:95},{de:406,ate:420,pct:0.0235,lim:90},{de:421,ate:435,pct:0.0233,lim:85},{de:436,ate:450,pct:0.0231,lim:85},{de:451,ate:465,pct:0.0229,lim:85},{de:466,ate:480,pct:0.0227,lim:85}];
 const FEMEAS=[{de:260,ate:270,pct:0.0270,lim:100},{de:271,ate:285,pct:0.0268,lim:100},{de:286,ate:300,pct:0.0266,lim:100},{de:301,ate:315,pct:0.0264,lim:90},{de:316,ate:330,pct:0.0262,lim:90},{de:331,ate:345,pct:0.0260,lim:90},{de:346,ate:360,pct:0.0258,lim:80},{de:361,ate:375,pct:0.0256,lim:80},{de:376,ate:390,pct:0.0254,lim:80},{de:391,ate:405,pct:0.0252,lim:80}];
-const ST={'d-sexo':'macho','d-raca':0,'d-peso':360,'d-dias':null,'d-carcaca':5.10,'d-qtd':150,'ms-sexo':'macho','ms-raca':0,'ms-peso':360,'ms-dias':110,'ms-carcaca':5.10,'ms-qtd':150,'ms-consumo':0};
+const ST={'d-sexo':'macho','d-raca':0,'d-peso':360,'d-dias':null,'d-carcaca':CARCACA,'d-qtd':150,'ms-sexo':'macho','ms-raca':0,'ms-peso':360,'ms-dias':110,'ms-carcaca':CARCACA,'ms-qtd':150,'ms-consumo':0};
 function r2(n){return Math.round(n*100)/100;}
 function fmtU(n){return'U$ '+n.toFixed(2).replace('.',',');}
 function fmtUG(n){return'U$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
@@ -355,14 +357,16 @@ function darD(f,apos,hib){
   const media=((40+H+J*1.4)+(H+J*1.4))/2;
   return (media*f.pct*r/0.87)*MS_PRECO+FIXO+LUCRO_ADM;
 }
-function step(k,d,mn,mx){ST[k]=Math.max(mn,Math.min(mx,(ST[k]||360)+d));document.getElementById('sv-'+k).textContent=ST[k];}
-function stepF(k,d,mn,mx){ST[k]=r2(Math.max(mn,Math.min(mx,(ST[k]||5.10)+d)));document.getElementById('sv-'+k).textContent='U$ '+ST[k].toFixed(2).replace('.',',');}
+function setSV(k){const el=document.getElementById('sv-'+k);if(!el)return;const v=ST[k];el.value=(v===null||v===undefined)?'':(k.indexOf('carcaca')>=0?v.toFixed(2).replace('.',','):String(v));}
+function digita(k,mn,mx,dec){const el=document.getElementById('sv-'+k);const t=String(el.value).trim().replace(/\s/g,'').replace(/\.(?=\d{3}(\D|$))/g,'').replace(',','.');let v=parseFloat(t);if(isNaN(v)){setSV(k);return false;}v=Math.max(mn,Math.min(mx,v));const m=Math.pow(10,dec);ST[k]=Math.round(v*m)/m;setSV(k);return true;}
+function step(k,d,mn,mx){ST[k]=Math.max(mn,Math.min(mx,(ST[k]||360)+d));setSV(k);}
+function stepF(k,d,mn,mx){ST[k]=r2(Math.max(mn,Math.min(mx,(ST[k]||CARCACA)+d)));setSV(k);}
 function setToggle(k,v,btn){ST[k]=v;btn.parentElement.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
 function setConsumo(dir){if(dir===0){ST['ms-consumo']=0;}else{const n=ST['ms-consumo']+dir;if(n<-2||n>2)return;ST['ms-consumo']=n;}const c=ST['ms-consumo'];document.getElementById('cb-menos').classList.toggle('on',c<0);document.getElementById('cb-pad').classList.toggle('on',c===0);document.getElementById('cb-mais').classList.toggle('on',c>0);calcMS();}
 function irAba(id,el){document.querySelectorAll('.aba').forEach(a=>a.classList.remove('ativa'));document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));el.classList.add('ativa');document.getElementById('aba-'+id).classList.add('ativa');syncEmp(id);}
 function syncEmp(from){const e=document.getElementById(from+'-empresa').value;['d','ms'].forEach(k=>{if(k!==from)document.getElementById(k+'-empresa').value=e;});}
 function buildQtd(gid,sk){const g=document.getElementById(gid);g.innerHTML='';[150,300,450,600,750,900,1050,1200].forEach(q=>{const b=document.createElement('button');b.className='qtd-btn'+(q===150?' on':'');b.textContent=q;b.onclick=()=>{g.querySelectorAll('.qtd-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');ST[sk]=q;};g.appendChild(b);});}
-function calcD(){const sexo=ST['d-sexo'],peso=ST['d-peso'],hib=ST['d-raca']>0;const f=getFaixa(peso,sexo);if(ST['d-dias']===null){ST['d-dias']=f.lim;document.getElementById('sv-d-dias').textContent=f.lim;}const dias=ST['d-dias'],emp=document.getElementById('d-empresa').value||'—';const racaNome=hib?'Híbrido':'Zebu';const dN=r2(darD(f,false,hib,sexo)),dA=r2(darD(f,true,hib,sexo));let diariaMed;if(dias<=f.lim){diariaMed=dN;document.getElementById('rd-periodos').style.display='none';document.getElementById('rd-apos-box').style.display='flex';document.getElementById('rd-apos').textContent=fmtU(dA);document.getElementById('rd-apos-label').textContent='Após o limite de '+f.lim+' dias:';}else{const de=dias-f.lim,cN=dN*f.lim,cA=dA*de;diariaMed=(cN+cA)/dias;document.getElementById('rd-p1-label').textContent=f.lim+' dias × '+fmtU(dN)+' (dentro do limite)';document.getElementById('rd-p1-val').textContent=fmtUG(cN);document.getElementById('rd-p2-label').textContent=de+' dias × '+fmtU(dA)+' (além do limite)';document.getElementById('rd-p2-val').textContent=fmtUG(cA);document.getElementById('rd-media').textContent=fmtU(diariaMed);document.getElementById('rd-periodos').style.display='block';document.getElementById('rd-apos-box').style.display='none';}const envio=document.getElementById('d-data').value;const saida=envio?addDias(envio,dias):'—';document.getElementById('rd-empresa').textContent=emp;document.getElementById('rd-val').textContent=fmtU(diariaMed);document.getElementById('rd-faixa').textContent=(f.de===0?'0':f.de)+'–'+f.ate+' kg';document.getElementById('rd-raca').textContent=racaNome;document.getElementById('rd-limite').textContent=f.lim+' dias';document.getElementById('rd-dias').textContent=dias+' dias';document.getElementById('res-d').style.display='block';}
+function calcD(){const sexo=ST['d-sexo'],peso=ST['d-peso'],hib=ST['d-raca']>0;const f=getFaixa(peso,sexo);if(ST['d-dias']===null){ST['d-dias']=f.lim;setSV('d-dias');}const dias=ST['d-dias'],emp=document.getElementById('d-empresa').value||'—';const racaNome=hib?'Híbrido':'Zebu';const dN=r2(darD(f,false,hib,sexo)),dA=r2(darD(f,true,hib,sexo));let diariaMed;if(dias<=f.lim){diariaMed=dN;document.getElementById('rd-periodos').style.display='none';document.getElementById('rd-apos-box').style.display='flex';document.getElementById('rd-apos').textContent=fmtU(dA);document.getElementById('rd-apos-label').textContent='Após o limite de '+f.lim+' dias:';}else{const de=dias-f.lim,cN=dN*f.lim,cA=dA*de;diariaMed=(cN+cA)/dias;document.getElementById('rd-p1-label').textContent=f.lim+' dias × '+fmtU(dN)+' (dentro do limite)';document.getElementById('rd-p1-val').textContent=fmtUG(cN);document.getElementById('rd-p2-label').textContent=de+' dias × '+fmtU(dA)+' (além do limite)';document.getElementById('rd-p2-val').textContent=fmtUG(cA);document.getElementById('rd-media').textContent=fmtU(diariaMed);document.getElementById('rd-periodos').style.display='block';document.getElementById('rd-apos-box').style.display='none';}const envio=document.getElementById('d-data').value;const saida=envio?addDias(envio,dias):'—';document.getElementById('rd-empresa').textContent=emp;document.getElementById('rd-val').textContent=fmtU(diariaMed);document.getElementById('rd-faixa').textContent=(f.de===0?'0':f.de)+'–'+f.ate+' kg';document.getElementById('rd-raca').textContent=racaNome;document.getElementById('rd-limite').textContent=f.lim+' dias';document.getElementById('rd-dias').textContent=dias+' dias';document.getElementById('res-d').style.display='block';}
 function fmtN(n,c){return Number(n).toLocaleString('pt-BR',{minimumFractionDigits:c,maximumFractionDigits:c});}
 function fmtPct(p){return (p>=0?'+':'')+fmtN(p,1)+'%';}
 function msCalc(peso,sexo,hib,dias,cs){const f=getFaixa(peso,sexo);const pm=pmMS(peso,dias);const pct=f.pct*(1+(hib?HIB:0))*(1+cs*0.02);const consumo=r2(pm*pct);const alim=r2(consumo*MS_KG);const serv=r2(SERVICO);return{f:f,pm:pm,pct:pct,consumo:consumo,alim:alim,serv:serv,diaria:r2(alim+serv)};}
@@ -484,6 +488,7 @@ function gerarPDF(tipo){
       return;}
     doc.save(nome);statusEl.textContent='✓ PDF salvo';setTimeout(function(){statusEl.textContent='';},3000);
   }catch(e){statusEl.textContent='❌ Erro ao gerar PDF';console.error(e);}}
+(function(){setSV('d-carcaca');setSV('ms-carcaca');})();
 (function(){if(VALIDADE){const d=new Date(VALIDADE+'T12:00:00');document.getElementById('txt-val').textContent=d.toLocaleDateString('pt-BR');}const hoje=new Date().toISOString().split('T')[0];document.getElementById('d-data').value=hoje;document.getElementById('ms-data').value=hoje;buildQtd('d-qtd-grid','d-qtd');buildQtd('ms-qtd-grid','ms-qtd');calcD();calcMS();})();
 </script>
 </body>
